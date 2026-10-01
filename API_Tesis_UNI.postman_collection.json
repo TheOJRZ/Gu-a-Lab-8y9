@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "API Tesis UNI",
+    "description": "Colección completa con Login, CRUD de Líneas y CRUD de Estudiantes con populate",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth - Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    pm.collectionVariables.set('token', jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"12345678\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+      }
+    },
+    {
+      "name": "Lineas - Crear",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Inteligencia Artificial\",\n  \"codigo\": \"IA-01\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/lineas", "host": ["{{baseUrl}}"], "path": ["api", "lineas"] }
+      }
+    },
+    {
+      "name": "Lineas - Obtener Todas",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/lineas", "host": ["{{baseUrl}}"], "path": ["api", "lineas"] }
+      }
+    },
+    {
+      "name": "Estudiantes - Crear con Línea",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"carnet\": \"2024-0012U\",\n  \"nombre\": \"Carlos Mendoza\",\n  \"carrera\": \"Sistemas\",\n  \"lineaInvestigacion\": \"ID_LINEA_AQUI\"\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/estudiantes", "host": ["{{baseUrl}}"], "path": ["api", "estudiantes"] }
+      }
+    },
+    {
+      "name": "Estudiantes - Obtener por ID (Populate)",
+      "request": {
+        "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/api/estudiantes/:id", "host": ["{{baseUrl}}"], "path": ["api", "estudiantes", ":id"] }
+      }
+    }
+  ]
+}

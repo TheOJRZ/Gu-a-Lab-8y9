@@ -1,32 +1,38 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const authRoutes = require('./src/routes/authRoutes');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
 
-// Importaciones de Swagger
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocs = require('./src/swagger');
+// Importación de rutas
+const authRoutes = require("./src/routes/authRoutes");
+const lineaRoutes = require("./src/routes/lineaRoutes");
+const estudianteRoutes = require("./src/routes/estudianteRoutes");
+
+// Swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./src/swagger");
 
 const app = express();
-
 app.use(express.json());
 
-// Ruta para la documentación interactiva
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// Documentación interactiva
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Rutas de la API
-app.use('/api/auth', authRoutes);
+// Endpoints principales
+app.use("/api/auth", authRoutes);
+app.use("/api/lineas", lineaRoutes);
+app.use("/api/estudiantes", estudianteRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('Base de datos MongoDB Atlas conectada con éxito');
+    console.log("Base de datos MongoDB Atlas conectada con éxito");
     app.listen(PORT, () => {
       console.log(`Servidor escuchando en http://localhost:${PORT}`);
-      console.log(`Swagger UI disponible en http://localhost:${PORT}/api-docs`);
+      console.log(
+        `Documentación interactiva disponible en: http://localhost:${PORT}/api-docs`,
+      );
     });
   })
-  .catch((err) => {
-    console.error('Error de conexión a MongoDB:', err.message);
-  });
+  .catch((err) => console.error("Error al conectar:", err));
