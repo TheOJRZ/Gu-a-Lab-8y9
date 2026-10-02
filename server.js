@@ -32,7 +32,7 @@ mongoose
   .then(() => {
     console.log("Base de datos MongoDB Atlas conectada con éxito");
     app.listen(PORT, () => {
-      console.log(`Servidor escuchando en http://localhost:${PORT}`);
+      console.log(`Documentación interactiva disponible en: http://localhost:${PORT}/api-docs`);
     });
   })
   .catch((err) => console.error("Error al conectar:", err));

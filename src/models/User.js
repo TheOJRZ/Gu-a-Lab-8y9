@@ -7,12 +7,11 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true }
 });
 
-// Hash de password antes de guardar si fue modificada
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+// En funciones async de Mongoose NO se usa next()
+userSchema.pre('save', async function() {
+  if (!this.isModified('password')) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 module.exports = mongoose.model('User', userSchema);
